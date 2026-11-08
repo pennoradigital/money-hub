@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Money Hub – Pennora Money Hub</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1B2A4A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Money Hub">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="appbar"><div class="in"><a class="mark" href="index.html"><span class="p">P</span><span><b>Money Hub</b><small>Pennora Digital</small></span></a><nav class="tabs" aria-label="Tools"><a href="index.html" aria-current="page">Home</a><a href="budget.html">Budget</a><a href="debt.html">Debt</a><a href="savings.html">Savings</a></nav></div></div>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Your <em>Money Hub</em></h1>
+      <p class="tag">Budget, debt and savings in one place. Pick a tool to get started.</p>
+    </div>
+    <div class="top-actions">
+      <label class="cur">Currency <select id="currency" aria-label="Currency symbol"></select></label>
+    </div>
+  </header>
+  <style>
+    .tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+    .tool{display:flex;flex-direction:column;text-decoration:none;color:inherit;background:#fff;border-radius:var(--radius);overflow:hidden;box-shadow:0 1px 2px rgba(20,30,55,.05),0 8px 24px rgba(20,30,55,.07);transition:transform .15s,box-shadow .15s}
+    .tool:hover{transform:translateY(-2px);box-shadow:0 2px 4px rgba(20,30,55,.06),0 14px 30px rgba(20,30,55,.12)}
+    .tool .th{background:var(--navy);color:#fff;padding:18px 20px;position:relative}
+    .tool .th .ic{width:42px;height:42px;border-radius:12px;background:var(--gold);display:grid;place-items:center;margin-bottom:10px}
+    .tool .th b{font-size:19px;display:block}
+    .tool .th span{font-size:13px;color:#C9D2E6}
+    .tool .tb{padding:18px 20px;flex:1;display:flex;flex-direction:column;gap:4px}
+    .tool .l{font-size:12px;color:var(--muted);text-transform:uppercase;letter-spacing:1px}
+    .tool .v{font-size:28px;font-weight:700;color:var(--navy)}
+    .tool .s{font-size:13.5px;color:var(--muted)}
+    .tool .go{margin-top:14px;font-weight:700;color:var(--gold);font-size:14px}
+    .steps{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:18px}
+    .steps .card b{color:var(--navy)}
+    .n{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:50%;background:var(--gold-bg);color:#8A6A00;font-weight:700;font-size:13px;margin-right:8px}
+    @media (max-width:900px){.tools,.steps{grid-template-columns:1fr}}
+  </style>
+  <div class="tools">
+    <a class="tool" href="budget.html">
+      <div class="th"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B2A4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18M7 15h4"/></svg></div><b>Budget Planner</b><span>Plan the month, track spending</span></div>
+      <div class="tb"><div class="l">Left to spend this month</div><div class="v" id="bV">—</div><div class="s" id="bS">Set up your first budget</div><div class="go">Open budget →</div></div>
+    </a>
+    <a class="tool" href="debt.html">
+      <div class="th"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B2A4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20h16M6 16l4-5 3 3 5-7"/></svg></div><b>Debt Payoff Planner</b><span>Snowball vs avalanche</span></div>
+      <div class="tb"><div class="l">Your debt-free date</div><div class="v" id="dV">—</div><div class="s" id="dS">Add your debts to see it</div><div class="go">Open debt planner →</div></div>
+    </a>
+    <a class="tool" href="savings.html">
+      <div class="th"><div class="ic"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#1B2A4A" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="8"/><circle cx="12" cy="12" r="3.5"/></svg></div><b>Savings Goals</b><span>Goal-reached dates + 52-week challenge</span></div>
+      <div class="tb"><div class="l">Total saved</div><div class="v" id="sV">—</div><div class="s" id="sS">Add your first goal</div><div class="go">Open savings →</div></div>
+    </a>
+  </div>
+  <div class="steps">
+    <div class="card"><span class="n">1</span><b>Add it to your phone</b><p class="hint">iPhone: tap Share, then <b>Add to Home Screen</b>. Android: tap ⋮ then <b>Install app</b> or <b>Add to Home screen</b>. It opens like an app and works offline.</p></div>
+    <div class="card"><span class="n">2</span><b>Example numbers first</b><p class="hint">Each tool starts with example numbers so you can see how it works. Type over them, or use <b>Start fresh</b> in each tool.</p></div>
+    <div class="card"><span class="n">3</span><b>Your data stays with you</b><p class="hint">Everything saves on this device only, in this browser. Use <b>Save backup file</b> to move it to another phone or computer.</p></div>
+  </div>
+  <p class="privacy"><b>Private by design:</b> no login, no ads, nothing is sent anywhere. Made by PennoraDigital.</p>
+</div>
+<script src="common.js"></script>
+<script>
+(function(){
+var $=PH.$;
+function draw(){
+  var b=PH.load("pennora-hub-budget-v1",null),m=b&&b.months&&b.months[PH.ym()];
+  if(m){var inc=m.income.reduce(function(s,x){return s+PH.pos(x.a)},0),sp=m.cats.reduce(function(s,c){return s+PH.pos(c.s)},0);$("bV").textContent=PH.money(inc-sp);$("bS").textContent=PH.money(sp)+" spent of "+PH.money(inc)+" income"}
+  var d=PH.load("pennora-hub-debt-v1",null),r=PH.debtFree(d);
+  if(r&&r.total>0){$("dV").textContent=isFinite(r.months)?PH.ymLabel(PH.ymAdd(r.start,r.months-1),true):"Not yet";$("dS").textContent=PH.money(r.total,d.cur)+" of debt · "+(isFinite(r.months)?PH.dur(r.months)+" to go":"raise your payments")}
+  else if(r){$("dV").textContent="Debt-free ✓";$("dS").textContent="No debts entered"}
+  var s=PH.load("pennora-hub-savings-v1",null);
+  if(s&&Array.isArray(s.goals)&&s.goals.length){var t=0,g=0;s.goals.forEach(function(x){t+=PH.pos(x.s);g+=PH.pos(x.t)});$("sV").textContent=PH.money(t);$("sS").textContent="of "+PH.money(g)+" across "+s.goals.length+" goals"}
+}
+PH.curSelect($("currency"),PH.cur(),function(v){PH.setCur(v);draw()});
+draw();
+})();
+</script>
+</body>
+</html>

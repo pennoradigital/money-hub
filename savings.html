@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Savings Tracker – Pennora Money Hub</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1B2A4A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Money Hub">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="appbar"><div class="in"><a class="mark" href="index.html"><span class="p">P</span><span><b>Money Hub</b><small>Pennora Digital</small></span></a><nav class="tabs" aria-label="Tools"><a href="index.html">Home</a><a href="budget.html">Budget</a><a href="debt.html">Debt</a><a href="savings.html" aria-current="page">Savings</a></nav></div></div>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Savings <em>Goals</em></h1>
+      <p class="tag">See the exact month you'll reach each goal, and watch it get closer.</p>
+    </div>
+    <div class="top-actions">
+      <label class="cur">Currency <select id="currency" aria-label="Currency symbol"></select></label>
+      <button class="btn ghost" id="printBtn" type="button">Print my goals</button>
+    </div>
+  </header>
+  <p class="print-head" id="printHead"></p>
+  <style>
+    .goals{display:grid;gap:14px}
+    .goal{border:1.5px solid var(--line);border-radius:14px;padding:14px;background:#FCFCFE}
+    .goal .gh{display:flex;align-items:center;gap:12px}
+    .ring{width:64px;height:64px;flex:none}
+    .gname{flex:1;min-width:0;width:100%;border:0;border-bottom:1.5px dashed var(--line);background:transparent;padding:4px 2px;font-weight:700;font-size:16px;outline:0;color:var(--navy)}
+    .g4{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1.3fr);gap:10px;margin-top:12px}
+    .g4 .lbl{font-size:11.5px;color:var(--muted);margin-bottom:3px}
+    .reach{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-top:12px;background:var(--gold-bg);border-radius:10px;padding:9px 12px;font-size:14px}
+    .reach b{color:var(--navy);font-size:16px}
+    .add{display:flex;gap:8px;margin-top:10px;align-items:center;flex-wrap:wrap}
+    .add .inp{width:150px}
+    .goal input[type=month]{min-width:0;font-size:14px}
+    .wk{display:grid;grid-template-columns:repeat(13,minmax(0,1fr));gap:5px}
+    .wk button{border:1.5px solid var(--line);background:#fff;border-radius:8px;padding:5px 0;font-size:11px;cursor:pointer;line-height:1.2}
+    .wk button b{display:block;font-size:12px;color:var(--navy)}
+    .wk button[aria-pressed="true"]{background:var(--navy);border-color:var(--navy);color:#fff}
+    .wk button[aria-pressed="true"] b{color:var(--gold-l)}
+    @media (max-width:560px){.g4{grid-template-columns:repeat(2,minmax(0,1fr))}.wk{grid-template-columns:repeat(7,minmax(0,1fr))}}
+  </style>
+  <div class="grid">
+    <div class="col">
+      <section class="card">
+        <h2><span class="grow">Your goals</span><span class="saved" id="saved">✓ Saved on this device</span></h2>
+        <div class="goals" id="goals"></div>
+        <div class="row-actions no-print"><button class="btn ghost small" id="addGoal" type="button">+ Add a goal</button></div>
+      </section>
+    </div>
+    <div class="col">
+      <section class="hero">
+        <div class="lab">Total saved</div>
+        <div class="big gold" id="hTot"></div>
+        <div class="small" id="hSmall"></div>
+        <div class="bar" style="margin-top:12px;background:rgba(255,255,255,.18)"><i id="hBar"></i></div>
+        <div id="hChip"></div>
+      </section>
+      <section class="card" style="background:var(--navy);color:#fff">
+        <h2 style="color:#fff">What if I saved a bit more?</h2>
+        <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap;font-size:14px">
+          <span>Goal</span><div class="inp" style="flex:1;min-width:160px"><select id="wGoal" aria-label="Goal"></select></div>
+        </div>
+        <div style="display:flex;justify-content:space-between;margin-top:12px;font-size:14px"><span>Extra each month</span><b id="wVal" style="color:var(--gold-l)"></b></div>
+        <input type="range" id="wRange" min="0" max="1000" step="10" value="100" aria-label="Extra each month">
+        <div id="wOut" style="font-size:15px;margin-top:6px"></div>
+      </section>
+      <section class="card">
+        <h2><span class="grow">52-week savings challenge</span><span class="pill grey" id="cTot"></span></h2>
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px;font-size:13.5px">
+          <span>Week 1 amount</span><div class="inp" style="width:110px"><span class="cs"></span><input id="cStart" inputmode="decimal"></div>
+          <div class="inp" style="width:auto"><select id="cMode" aria-label="Challenge type"><option value="up">Classic (goes up)</option><option value="down">Reverse (goes down)</option><option value="flat">Same every week</option></select></div>
+        </div>
+        <div class="wk" id="weeks"></div>
+        <div class="bar" style="margin-top:12px"><i id="cBar"></i></div>
+        <p class="hint" id="cTxt"></p>
+      </section>
+      <details class="more card no-print">
+        <summary>Backup &amp; reset</summary>
+        <p class="hint">Your goals are saved in this browser only. Save a backup file to move them to another device.</p>
+        <div class="row-actions">
+          <button class="btn ghost small" id="exportBtn" type="button">Save backup file</button>
+          <button class="btn ghost small" id="importBtn" type="button">Open backup file</button>
+          <input type="file" id="importFile" accept=".json,application/json" hidden>
+          <button class="btn ghost small" id="resetBtn" type="button">Start fresh</button>
+        </div>
+      </details>
+    </div>
+  </div>
+  <p class="privacy"><b>Private by design:</b> no login, no ads, nothing is sent anywhere. Your numbers stay on this device.</p>
+</div>
+<script src="common.js"></script>
+<script>
+(function(){
+var KEY="pennora-hub-savings-v1",$=PH.$,MAXG=12;
+function sample(){var n=PH.ym();return {goals:[
+  {n:"Emergency fund",t:18600,s:6450,by:PH.ymAdd(n,19),m:700},
+  {n:"Holiday",t:4500,s:2650,by:PH.ymAdd(n,10),m:450},
+  {n:"House deposit",t:60000,s:17400,by:PH.ymAdd(n,49),m:1100},
+  {n:"New car",t:12000,s:1200,by:PH.ymAdd(n,25),m:300}],
+  ch:{start:5,mode:"up",done:[1,2,3,4,5,6,7,8,9]},w:{g:0,x:100}}}
+var S=PH.load(KEY,null); if(!S||!Array.isArray(S.goals))S=sample(); if(!S.ch)S.ch={start:1,mode:"up",done:[]}; if(!S.w)S.w={g:0,x:100};
+function save(){PH.store(KEY,S,"saved")}
+function calc(g){var left=Math.max(0,PH.pos(g.t)-PH.pos(g.s)),now=PH.ym(),months=left<=0?0:(PH.pos(g.m)>0?Math.ceil(left/PH.pos(g.m)-1e-9):Infinity);
+  var reach=months===0?now:(isFinite(months)?PH.ymAdd(now,months):null),need=null,ml=null,status;
+  if(g.by&&/^\d{4}-\d{2}$/.test(g.by)){ml=Math.max(0,PH.ymDiff(now,g.by));need=left<=0?0:left/Math.max(1,ml)}
+  if(PH.pos(g.t)>0&&left<=0)status=["good","Reached ✓"];else if(!isFinite(months))status=["grey","Add a monthly amount"];else if(need===null)status=["grey","Saving"];else if(PH.pos(g.m)+0.005>=need)status=["good","On track"];else status=["bad","Behind"];
+  return {left:left,months:months,reach:reach,need:need,ml:ml,status:status,pct:PH.pos(g.t)>0?Math.min(1,PH.pos(g.s)/PH.pos(g.t)):0}}
+function ring(p){var r=26,c=2*Math.PI*r;return '<svg class="ring" viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="32" r="'+r+'" fill="none" stroke="#E8EDF6" stroke-width="7"/><circle cx="32" cy="32" r="'+r+'" fill="none" stroke="#C9A227" stroke-width="7" stroke-linecap="round" stroke-dasharray="'+(c*p).toFixed(1)+' '+c.toFixed(1)+'" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" font-size="14" font-weight="700" fill="#1B2A4A">'+Math.round(p*100)+'%</text></svg>'}
+function fld(lbl,key,i,val,money,type){return '<div><div class="lbl">'+lbl+'</div><div class="inp">'+(money?'<span class="cs">'+PH.esc(PH.cur())+'</span>':'')+'<input data-k="'+key+'" data-i="'+i+'" '+(type?'type="'+type+'"':'inputmode="decimal"')+' value="'+(type?PH.esc(val||""):(val?Math.round(val*100)/100:""))+'" placeholder="'+(type?"":"0")+'"></div></div>'}
+function render(){
+  $("goals").innerHTML=S.goals.map(function(g,i){return '<div class="goal"><div class="gh"><span id="rg'+i+'"></span><input class="gname" data-k="n" data-i="'+i+'" value="'+PH.esc(g.n)+'" placeholder="Goal name, e.g. Holiday" maxlength="40"><button class="x no-print" data-del="'+i+'" aria-label="Remove goal">×</button></div>'+
+    '<div class="g4">'+fld("Target","t",i,g.t,1)+fld("Saved so far","s",i,g.s,1)+fld("Save each month","m",i,g.m,1)+fld("Want it by","by",i,g.by,0,"month")+'</div>'+
+    '<div class="reach" id="re'+i+'"></div>'+
+    '<div class="add no-print"><div class="inp"><span class="cs">'+PH.esc(PH.cur())+'</span><input id="ad'+i+'" inputmode="decimal" placeholder="Amount" aria-label="Amount to add"></div><button class="btn small" data-add="'+i+'" type="button">+ Add money</button><button class="btn ghost small" data-sub="'+i+'" type="button">− Take out</button></div></div>'}).join("");
+  $("addGoal").style.display=S.goals.length>=MAXG?"none":"";
+  $("cStart").value=S.ch.start||"";$("cMode").value=S.ch.mode;
+  update();
+}
+function wk(n){var a=PH.pos(S.ch.start);return S.ch.mode==="down"?a*(53-n):S.ch.mode==="flat"?a:a*n}
+function update(){
+  var tot=0,tgt=0,next=null;
+  S.goals.forEach(function(g,i){var c=calc(g);tot+=PH.pos(g.s);tgt+=PH.pos(g.t);var rg=$("rg"+i);if(!rg)return;rg.innerHTML=ring(c.pct);
+    var txt=c.status[1]==="Reached ✓"?'<b>Goal reached! 🎉</b>':(c.reach?'Goal reached: <b>'+PH.ymLabel(c.reach,true)+'</b> <span style="color:var(--muted)">('+PH.dur(c.months)+')</span>':'<span>Add how much you\'ll save each month to see your date</span>');
+    if(c.need!==null&&c.status[0]==="bad")txt+=' <span style="color:var(--bad)">· save '+PH.money(c.need)+'/mth to hit your date</span>';
+    $("re"+i).innerHTML=txt+'<span style="flex:1"></span><span class="pill '+c.status[0]+'">'+c.status[1]+'</span>';
+    if(c.left>0&&c.reach&&(!next||c.months<next.m))next={n:g.n||"Goal "+(i+1),m:c.months,r:c.reach}});
+  $("hTot").textContent=PH.money(tot);$("hSmall").textContent="of "+PH.money(tgt)+" across "+S.goals.length+" goal"+(S.goals.length===1?"":"s");
+  $("hBar").style.width=(tgt?Math.min(100,tot/tgt*100):0)+"%";
+  $("hChip").innerHTML=next?'<span class="chip">Next up: '+PH.esc(next.n)+' in '+PH.ymLabel(next.r)+'</span>':'';
+  // what-if
+  var sel=$("wGoal"),opts=S.goals.map(function(g,i){return '<option value="'+i+'">'+PH.esc(g.n||("Goal "+(i+1)))+'</option>'}).join("");if(sel.innerHTML!==opts)sel.innerHTML=opts;
+  if(S.w.g>=S.goals.length)S.w.g=0;sel.value=S.w.g;$("wRange").value=S.w.x;$("wVal").textContent="+"+PH.money(S.w.x)+"/mth";
+  var g=S.goals[S.w.g];if(g){var a=calc(g),b=calc({t:g.t,s:g.s,m:PH.pos(g.m)+PH.pos(S.w.x),by:g.by});
+    $("wOut").innerHTML=a.left<=0?"This goal is already reached ✓":(b.reach?'You\'d reach it in <b style="color:var(--gold-l)">'+PH.ymLabel(b.reach,true)+'</b>'+(isFinite(a.months)&&a.months>b.months?' — <b>'+PH.dur(a.months-b.months)+' sooner</b>':''):"Move the slider to see your date")}else $("wOut").textContent="Add a goal first";
+  // challenge
+  var html="",sum=0,done=0;for(var n=1;n<=52;n++){var on=S.ch.done.indexOf(n)>=0,v=wk(n);sum+=v;if(on)done+=v;html+='<button type="button" data-w="'+n+'" aria-pressed="'+on+'" title="Week '+n+'">W'+n+'<b>'+PH.esc(PH.money(v))+'</b></button>'}
+  $("weeks").innerHTML=html;$("cTot").textContent="Total "+PH.money(sum);$("cBar").style.width=(sum?done/sum*100:0)+"%";
+  $("cTxt").textContent=PH.money(done)+" saved · "+S.ch.done.length+" of 52 weeks done. Tap a week when you've saved it.";
+  document.querySelectorAll(".cs").forEach(function(e){e.textContent=PH.cur()});
+  $("printHead").textContent="My savings goals · printed "+new Date().toLocaleDateString();
+  save();
+}
+document.addEventListener("input",function(e){var k=e.target.getAttribute("data-k");if(k){var g=S.goals[+e.target.getAttribute("data-i")];g[k]=(k==="n"||k==="by")?e.target.value.slice(0,40):PH.pos(e.target.value);update();return}
+  if(e.target.id==="wRange"){S.w.x=+e.target.value;update()} if(e.target.id==="cStart"){S.ch.start=PH.pos(e.target.value);update()}});
+document.addEventListener("change",function(e){if(e.target.id==="wGoal"){S.w.g=+e.target.value;update()}if(e.target.id==="cMode"){S.ch.mode=e.target.value;update()}});
+document.addEventListener("click",function(e){var t=e.target.closest?e.target.closest("button"):null;if(!t)return;
+  if(t.hasAttribute("data-del")){var i=+t.getAttribute("data-del");if(confirm("Remove the goal \""+(S.goals[i].n||"this goal")+"\"?")){S.goals.splice(i,1);render()}}
+  else if(t.hasAttribute("data-add")||t.hasAttribute("data-sub")){var i2=+(t.getAttribute("data-add")||t.getAttribute("data-sub")),inp=$("ad"+i2),v=PH.pos(inp.value);if(!v){inp.focus();return}
+    var g=S.goals[i2];g.s=Math.max(0,PH.pos(g.s)+(t.hasAttribute("data-sub")?-v:v));render()}
+  else if(t.hasAttribute("data-w")){var n=+t.getAttribute("data-w"),j=S.ch.done.indexOf(n);if(j>=0)S.ch.done.splice(j,1);else S.ch.done.push(n);update()}});
+$("addGoal").onclick=function(){S.goals.push({n:"",t:0,s:0,m:0,by:""});render()};
+$("resetBtn").onclick=function(){if(confirm("Delete all goals and the challenge, and start with a blank page?")){S={goals:[{n:"",t:0,s:0,m:0,by:""}],ch:{start:1,mode:"up",done:[]},w:{g:0,x:100}};render()}};
+$("printBtn").onclick=function(){window.print()};
+$("exportBtn").onclick=function(){PH.download("pennora-savings-backup.json",{app:"pennora-savings",v:1,data:S})};
+$("importBtn").onclick=function(){$("importFile").click()};
+PH.pickFile($("importFile"),function(o){var d=o&&o.data;if(!d||!Array.isArray(d.goals)){alert("That doesn't look like a Savings backup file.");return}S=d;if(!S.ch)S.ch={start:1,mode:"up",done:[]};if(!S.w)S.w={g:0,x:100};render()});
+PH.curSelect($("currency"),PH.cur(),function(v){PH.setCur(v);render()});
+render();
+})();
+</script>
+</body>
+</html>

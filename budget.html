@@ -1,0 +1,183 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Budget Planner – Pennora Money Hub</title>
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#1B2A4A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="Money Hub">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="stylesheet" href="fonts.css">
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<div class="appbar"><div class="in"><a class="mark" href="index.html"><span class="p">P</span><span><b>Money Hub</b><small>Pennora Digital</small></span></a><nav class="tabs" aria-label="Tools"><a href="index.html">Home</a><a href="budget.html" aria-current="page">Budget</a><a href="debt.html">Debt</a><a href="savings.html">Savings</a></nav></div></div>
+<div class="wrap">
+  <header class="top">
+    <div>
+      <h1>Monthly <em>Budget</em></h1>
+      <p class="tag">Give every dollar a job, then see what's left to spend.</p>
+    </div>
+    <div class="top-actions">
+      <label class="cur">Currency <select id="currency" aria-label="Currency symbol"></select></label>
+      <button class="btn ghost" id="printBtn" type="button">Print this month</button>
+    </div>
+  </header>
+  <p class="print-head" id="printHead"></p>
+
+  <div class="monthbar card no-print" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:18px;padding:12px 16px">
+    <button class="btn ghost small" id="prevM" type="button" aria-label="Previous month">‹</button>
+    <strong id="mLabel" style="font-size:18px;color:var(--navy);min-width:150px;text-align:center"></strong>
+    <button class="btn ghost small" id="nextM" type="button" aria-label="Next month">›</button>
+    <button class="btn ghost small" id="copyBtn" type="button">Copy last month's budget</button>
+    <span style="flex:1"></span>
+    <span class="saved" id="saved">✓ Saved on this device</span>
+  </div>
+
+  <div class="grid">
+    <div class="col">
+      <section class="card">
+        <h2><span class="grow">Money coming in</span></h2>
+        <table><thead><tr><th>Income</th><th class="num" style="width:34%">Amount this month</th><th style="width:36px"></th></tr></thead><tbody id="incBody"></tbody></table>
+        <div class="row-actions no-print"><button class="btn ghost small" id="addInc" type="button">+ Add income</button></div>
+      </section>
+      <section class="card">
+        <h2><span class="grow">Money going out</span></h2>
+        <p class="hint" style="margin:-8px 0 10px">Type a <b>Budget</b> (your plan) and what you <b>Spent</b>. Group: Needs, Wants, or Savings &amp; Debt.</p>
+        <div style="overflow-x:auto"><table style="min-width:520px;table-layout:fixed"><colgroup><col style="width:31%"><col style="width:21%"><col style="width:18%"><col style="width:18%"><col style="width:12%"><col style="width:36px"></colgroup><thead><tr><th>Category</th><th>Group</th><th class="num">Budget</th><th class="num">Spent</th><th class="num">Left</th><th></th></tr></thead><tbody id="catBody"></tbody></table></div>
+        <div class="row-actions no-print"><button class="btn ghost small" id="addCat" type="button">+ Add category</button></div>
+      </section>
+    </div>
+    <div class="col">
+      <section class="hero">
+        <div class="lab">Left to spend this month</div>
+        <div class="big gold" id="hLeft"></div>
+        <div class="small" id="hSmall"></div>
+        <div id="hChip"></div>
+      </section>
+      <div class="kpis" style="grid-template-columns:repeat(3,minmax(0,1fr))">
+        <div class="kpi"><div class="l">Income</div><div class="v" id="kInc"></div><div class="s">this month</div></div>
+        <div class="kpi" style="border-top-color:var(--gold)"><div class="l">Budgeted</div><div class="v" id="kBud"></div><div class="s" id="kBudS"></div></div>
+        <div class="kpi" style="border-top-color:var(--bad)"><div class="l">Spent</div><div class="v" id="kSp"></div><div class="s" id="kSpS"></div></div>
+      </div>
+      <section class="card">
+        <h2>Where your money went</h2>
+        <div style="display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+          <div id="donut" style="width:170px;height:170px;flex:none"></div>
+          <div id="legend" style="flex:1;min-width:180px"></div>
+        </div>
+      </section>
+      <section class="card">
+        <h2>50 / 30 / 20 check</h2>
+        <p class="hint" style="margin:-8px 0 12px">A popular rule of thumb: about 50% of income on needs, 30% on wants and 20% on savings &amp; debt.</p>
+        <div id="rule"></div>
+      </section>
+      <section class="card">
+        <h2>Your year so far</h2>
+        <div id="yearChart"></div>
+      </section>
+      <details class="more card no-print">
+        <summary>Backup &amp; reset</summary>
+        <p class="hint">Your budget is saved in this browser only. Save a backup file to move it to another device.</p>
+        <div class="row-actions">
+          <button class="btn ghost small" id="exportBtn" type="button">Save backup file</button>
+          <button class="btn ghost small" id="importBtn" type="button">Open backup file</button>
+          <input type="file" id="importFile" accept=".json,application/json" hidden>
+          <button class="btn ghost small" id="clearM" type="button">Clear this month</button>
+          <button class="btn ghost small" id="resetBtn" type="button">Start fresh (all months)</button>
+        </div>
+      </details>
+    </div>
+  </div>
+  <p class="privacy"><b>Private by design:</b> no login, no ads, nothing is sent anywhere. Your numbers stay on this device.</p>
+</div>
+<script src="common.js"></script>
+<script>
+(function(){
+var KEY="pennora-hub-budget-v1",$=PH.$,GROUPS=["Needs","Wants","Savings & Debt"],GCOL={"Needs":"#1B2A4A","Wants":"#C9A227","Savings & Debt":"#5B7DB8"};
+function tpl(sample){return {income:[{n:"Salary / wages",a:sample?4800:0},{n:"Side income",a:sample?400:0}],
+ cats:[["Rent / mortgage","Needs",1750,1750],["Groceries","Needs",650,612],["Electricity & gas","Needs",180,164],["Phone & internet","Needs",110,110],
+ ["Transport & fuel","Needs",260,291],["Insurance","Needs",190,190],["Eating out","Wants",200,238],["Entertainment","Wants",120,85],
+ ["Shopping","Wants",150,96],["Subscriptions","Wants",45,45],["Savings","Savings & Debt",500,500],["Extra debt payment","Savings & Debt",200,200]]
+ .map(function(c){return {n:c[0],g:c[1],b:sample?c[2]:0,s:sample?c[3]:0}})}}
+function blankFrom(m){return {income:m.income.map(function(x){return {n:x.n,a:x.a}}),cats:m.cats.map(function(c){return {n:c.n,g:c.g,b:c.b,s:0}})}}
+var S=PH.load(KEY,null);
+if(!S||typeof S!=="object"||!S.months){var now=PH.ym();S={month:now,months:{}};S.months[now]=tpl(true)}
+if(!S.months[S.month])S.months[S.month]=tpl(false);
+function M(){return S.months[S.month]}
+function save(){PH.store(KEY,S,"saved")}
+function inputCell(val,cls,attr){return '<div class="inp"><span class="cs">'+PH.esc(PH.cur())+'</span><input inputmode="decimal" '+attr+' value="'+(val?Math.round(val*100)/100:"")+'" placeholder="0"></div>'}
+function render(){
+  var m=M();$("mLabel").textContent=PH.ymLabel(S.month,true);
+  $("incBody").innerHTML=m.income.map(function(x,i){return '<tr><td><div class="inp"><input data-t="in" data-i="'+i+'" value="'+PH.esc(x.n)+'" placeholder="Income name" maxlength="40"></div></td><td>'+inputCell(x.a,"",'data-t="ia" data-i="'+i+'" aria-label="Amount"')+'</td><td><button class="x no-print" data-del="inc" data-i="'+i+'" aria-label="Remove">×</button></td></tr>'}).join("");
+  $("catBody").innerHTML=m.cats.map(function(c,i){return '<tr><td><div class="inp"><input data-t="cn" data-i="'+i+'" value="'+PH.esc(c.n)+'" placeholder="Category" maxlength="40"></div><div class="bar" style="margin-top:6px;height:6px" id="cb'+i+'"><i></i></div></td>'+
+    '<td><div class="inp"><select data-t="cg" data-i="'+i+'">'+GROUPS.map(function(g){return '<option value="'+g+'"'+(g===c.g?' selected':'')+'>'+(g==="Savings & Debt"?"Save/Debt":g)+'</option>'}).join("")+'</select></div></td>'+
+    '<td>'+inputCell(c.b,"",'data-t="cb" data-i="'+i+'" aria-label="Budget"')+'</td><td>'+inputCell(c.s,"",'data-t="cs" data-i="'+i+'" aria-label="Spent"')+'</td>'+
+    '<td class="num" id="cl'+i+'"></td><td><button class="x no-print" data-del="cat" data-i="'+i+'" aria-label="Remove">×</button></td></tr>'}).join("");
+  update();
+}
+function totals(m){var inc=m.income.reduce(function(s,x){return s+PH.pos(x.a)},0),bud=0,sp=0,g={};GROUPS.forEach(function(k){g[k]=0});
+  m.cats.forEach(function(c){bud+=PH.pos(c.b);sp+=PH.pos(c.s);g[c.g]=(g[c.g]||0)+PH.pos(c.s)});return {inc:inc,bud:bud,sp:sp,g:g}}
+function update(){
+  var m=M(),t=totals(m),C=PH.cur();
+  m.cats.forEach(function(c,i){var left=PH.pos(c.b)-PH.pos(c.s),el=$("cl"+i);if(!el)return;el.innerHTML='<b style="color:'+(left<0?"var(--bad)":"var(--good)")+'">'+PH.money(left)+'</b>';
+    var b=$("cb"+i),pct=c.b>0?Math.min(1,c.s/c.b):(c.s>0?1:0);b.className="bar"+(c.s>c.b&&c.s>0?" over":"");b.firstChild.style.width=(pct*100)+"%"});
+  var left=t.inc-t.sp;$("hLeft").textContent=PH.money(left);
+  $("hSmall").textContent=PH.money(t.inc)+" in  −  "+PH.money(t.sp)+" spent";
+  var unplanned=t.inc-t.bud;
+  $("hChip").innerHTML=t.inc===0?'<span class="chip">Add your income to start</span>':(unplanned>=0?'<span class="chip">'+(unplanned<1?"Every dollar has a job ✓":PH.money(unplanned)+" not budgeted yet")+'</span>':'<span class="chip bad">Budget is '+PH.money(-unplanned)+' more than income</span>');
+  $("kInc").textContent=PH.money(t.inc);$("kBud").textContent=PH.money(t.bud);$("kBudS").textContent=t.inc?Math.round(t.bud/t.inc*100)+"% of income":"";
+  $("kSp").textContent=PH.money(t.sp);$("kSpS").textContent=t.bud?Math.round(t.sp/t.bud*100)+"% of budget":"";
+  // donut
+  var segs=GROUPS.map(function(g){return [g,t.g[g]||0]}),tot=t.sp,a=-Math.PI/2,svg='<svg viewBox="0 0 120 120" width="170" height="170" role="img" aria-label="Spending by group">';
+  if(tot<=0)svg+='<circle cx="60" cy="60" r="44" fill="none" stroke="#E8EDF6" stroke-width="20"/>';
+  segs.forEach(function(s){if(s[1]<=0)return;var f=s[1]/tot,a2=a+f*Math.PI*2;if(f>=.9999){svg+='<circle cx="60" cy="60" r="44" fill="none" stroke="'+GCOL[s[0]]+'" stroke-width="20"/>'}else{
+    var x1=60+44*Math.cos(a),y1=60+44*Math.sin(a),x2=60+44*Math.cos(a2),y2=60+44*Math.sin(a2);svg+='<path d="M'+x1.toFixed(2)+' '+y1.toFixed(2)+' A44 44 0 '+(f>.5?1:0)+' 1 '+x2.toFixed(2)+' '+y2.toFixed(2)+'" fill="none" stroke="'+GCOL[s[0]]+'" stroke-width="20"/>'}a=a2});
+  svg+='<text x="60" y="57" text-anchor="middle" font-size="9" fill="#6B7487">Spent</text><text x="60" y="71" text-anchor="middle" font-size="13" font-weight="700" fill="#1B2A4A">'+PH.esc(PH.money(tot))+'</text></svg>';
+  $("donut").innerHTML=svg;
+  $("legend").innerHTML=segs.map(function(s){return '<div style="display:flex;align-items:center;gap:8px;margin:6px 0"><i style="width:12px;height:12px;border-radius:3px;background:'+GCOL[s[0]]+'"></i><span style="flex:1">'+s[0]+'</span><b>'+PH.money(s[1])+'</b><span style="color:var(--muted);width:42px;text-align:right">'+(tot?Math.round(s[1]/tot*100):0)+'%</span></div>'}).join("");
+  // 50/30/20
+  var tg={"Needs":.5,"Wants":.3,"Savings & Debt":.2};
+  $("rule").innerHTML=GROUPS.map(function(g){var p=t.inc?t.g[g]/t.inc:0,goal=tg[g],ok=g==="Savings & Debt"?p>=goal-0.005:p<=goal+0.005;
+    return '<div style="margin:10px 0"><div style="display:flex;justify-content:space-between;font-size:13.5px"><span><b>'+g+'</b> <span style="color:var(--muted)">aim '+(g==="Savings & Debt"?"at least ":"up to ")+Math.round(goal*100)+'%</span></span><span><b>'+Math.round(p*100)+'%</b> '+(t.inc?'<span class="pill '+(ok?"good":"mid")+'">'+(ok?"Great":"Check")+'</span>':"")+'</span></div>'+
+    '<div class="bar" style="margin-top:5px;position:relative"><i style="width:'+Math.min(100,p*100)+'%;background:'+GCOL[g]+'"></i></div></div>'}).join("");
+  // year chart: last 12 months ending at current
+  var cols=[],mx=1;for(var k=-11;k<=0;k++){var key=PH.ymAdd(S.month,k),mm=S.months[key],tt=mm?totals(mm):{inc:0,sp:0};cols.push([key,tt.inc,tt.sp]);mx=Math.max(mx,tt.inc,tt.sp)}
+  var W=520,H=170,bw=W/12,s2='<svg viewBox="0 0 '+W+' '+(H+22)+'" width="100%" role="img" aria-label="Income and spending by month">';
+  cols.forEach(function(c,i){var x=i*bw+bw*.18,w=bw*.3,h1=c[1]/mx*H,h2=c[2]/mx*H;
+    s2+='<rect x="'+x.toFixed(1)+'" y="'+(H-h1).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h1.toFixed(1)+'" rx="3" fill="#1B2A4A"/><rect x="'+(x+w+2).toFixed(1)+'" y="'+(H-h2).toFixed(1)+'" width="'+w.toFixed(1)+'" height="'+h2.toFixed(1)+'" rx="3" fill="#C9A227"/>'+
+    '<text x="'+(i*bw+bw/2).toFixed(1)+'" y="'+(H+15)+'" text-anchor="middle" font-size="11" fill="'+(c[0]===S.month?"#1B2A4A":"#6B7487")+'" font-weight="'+(c[0]===S.month?700:400)+'">'+PH.MON[+c[0].split("-")[1]-1]+'</text>'});
+  s2+='</svg><div style="display:flex;gap:16px;font-size:12.5px;color:var(--muted)"><span><i style="display:inline-block;width:10px;height:10px;background:#1B2A4A;border-radius:2px"></i> Income</span><span><i style="display:inline-block;width:10px;height:10px;background:#C9A227;border-radius:2px"></i> Spent</span></div>';
+  $("yearChart").innerHTML=s2;
+  $("printHead").textContent="Budget for "+PH.ymLabel(S.month,true)+" · printed "+new Date().toLocaleDateString();
+  save();
+}
+document.addEventListener("input",function(e){var t=e.target.getAttribute("data-t");if(!t)return;var i=+e.target.getAttribute("data-i"),m=M(),v=e.target.value;
+  if(t==="in")m.income[i].n=v.slice(0,40);else if(t==="ia")m.income[i].a=PH.pos(v);else if(t==="cn")m.cats[i].n=v.slice(0,40);else if(t==="cb")m.cats[i].b=PH.pos(v);else if(t==="cs")m.cats[i].s=PH.pos(v);update()});
+document.addEventListener("change",function(e){if(e.target.getAttribute("data-t")==="cg"){M().cats[+e.target.getAttribute("data-i")].g=e.target.value;update()}});
+document.addEventListener("click",function(e){var d=e.target.getAttribute&&e.target.getAttribute("data-del");if(!d)return;var i=+e.target.getAttribute("data-i"),m=M();
+  if(d==="inc")m.income.splice(i,1);else m.cats.splice(i,1);render()});
+$("addInc").onclick=function(){M().income.push({n:"",a:0});render()};
+$("addCat").onclick=function(){M().cats.push({n:"",g:"Wants",b:0,s:0});render()};
+function go(k){S.month=PH.ymAdd(S.month,k);if(!S.months[S.month]){var prev=S.months[PH.ymAdd(S.month,-1)];S.months[S.month]=prev?blankFrom(prev):tpl(false)}render()}
+$("prevM").onclick=function(){go(-1)};$("nextM").onclick=function(){go(1)};
+$("copyBtn").onclick=function(){var prev=S.months[PH.ymAdd(S.month,-1)];if(!prev){alert("There's no budget saved for last month yet.");return}
+  if(confirm("Copy last month's income and budget amounts into "+PH.ymLabel(S.month,true)+"? Your spent amounts this month stay as they are.")){var m=M(),spent={};m.cats.forEach(function(c){spent[c.n]=c.s});S.months[S.month]=blankFrom(prev);S.months[S.month].cats.forEach(function(c){c.s=spent[c.n]||0});render()}};
+$("clearM").onclick=function(){if(confirm("Clear all spent amounts for "+PH.ymLabel(S.month,true)+"?")){M().cats.forEach(function(c){c.s=0});render()}};
+$("resetBtn").onclick=function(){if(confirm("Delete ALL months and start with a blank budget? Save a backup first if you might need it.")){var now=PH.ym();S={month:now,months:{}};S.months[now]=tpl(false);render()}};
+$("printBtn").onclick=function(){window.print()};
+$("exportBtn").onclick=function(){PH.download("pennora-budget-backup.json",{app:"pennora-budget",v:1,data:S})};
+$("importBtn").onclick=function(){$("importFile").click()};
+PH.pickFile($("importFile"),function(o){var d=o&&o.data;if(!d||!d.months){alert("That doesn't look like a Budget backup file.");return}S=d;if(!S.months[S.month])S.month=Object.keys(S.months).sort().pop();render()});
+PH.curSelect($("currency"),PH.cur(),function(v){PH.setCur(v);render()});
+render();
+})();
+</script>
+</body>
+</html>
